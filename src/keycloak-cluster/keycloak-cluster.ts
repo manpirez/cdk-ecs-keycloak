@@ -235,6 +235,7 @@ export class KeycloakCluster extends Construct {
         databaseCredentials: databaseInfo.credentials,
         databaseVendor: databaseInfo.vendor,
       },
+      runtimePlatform: props?.keycloak?.runtimePlatform,
     });
 
     // Enable the ecs deployment circuit breaker by default

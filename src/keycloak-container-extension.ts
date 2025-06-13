@@ -34,6 +34,12 @@ export interface KeycloakContainerExtensionProps {
   readonly image?: ecs.ContainerImage;
 
   /**
+   * Runtime platform for the container.
+   * @default - none
+   */
+  readonly runtimePlatform?: ecs.RuntimePlatform;
+
+  /**
    * A name for the container added to the task definition.
    * @default 'keycloak'
    */
@@ -188,13 +194,12 @@ export class KeycloakContainerExtension implements ecs.ITaskDefinitionExtension 
   private readonly _image: ecs.ContainerImage;
   private _cloudMapService?: cloudmap.IService;
   private readonly _databaseSchema?: string;
-  
+  private readonly _runtimePlatform?: ecs.RuntimePlatform;
 
   constructor(props?: KeycloakContainerExtensionProps) {
     this.cacheOwnersCount = props?.cacheOwnersCount ?? 1;
     this.cacheOwnersAuthSessionsCount = props?.cacheOwnersAuthSessionsCount ?? this.cacheOwnersCount;
-    this._image = props?.image ?? ecs.ContainerImage.fromRegistry('jboss/keycloak');
-
+    this._image = props?.image ?? ecs.ContainerImage.fromRegistry('quay.io/keycloak/keycloak:26.2.5');
     this.containerName = props?.containerName ?? 'keycloak';
     this.databaseVendor = props?.databaseVendor ?? KeycloakDatabaseVendor.H2;
     this.databaseName = props?.databaseName ?? 'keycloak';
@@ -205,6 +210,7 @@ export class KeycloakContainerExtension implements ecs.ITaskDefinitionExtension 
 
     this._memoryLimitMiB = props?.memoryLimitMiB;
     this._memoryReservationMiB = props?.memoryReservationMiB;
+    this._runtimePlatform = props?.runtimePlatform;
 
     this._logging = props?.logging ?? ecs.LogDriver.awsLogs({
       streamPrefix: '/cdk-ecs-keycloak',
@@ -241,6 +247,14 @@ export class KeycloakContainerExtension implements ecs.ITaskDefinitionExtension 
    * @inheritDoc
    */
   extend(taskDefinition: ecs.TaskDefinition): void {
+    if (this._runtimePlatform) {
+      const cfnTaskDef = taskDefinition.node.defaultChild as ecs.CfnTaskDefinition;
+      
+      cfnTaskDef.runtimePlatform = {
+        cpuArchitecture: this._runtimePlatform.cpuArchitecture?.toString(),
+        operatingSystemFamily: this._runtimePlatform.operatingSystemFamily?.toString()
+      };
+    }
     const keycloakSecrets: Record<string, ecs.Secret> = {};
 
     const databaseNameForVendor = this.databaseVendor != KeycloakDatabaseVendor.H2 ? this.databaseName : '';
