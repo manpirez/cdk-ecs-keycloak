@@ -261,7 +261,7 @@ Object {
     "KeycloakLoadBalancerHTTPSKeycloakGroupF8466409": Object {
       "Properties": Object {
         "HealthCheckEnabled": true,
-        "HealthCheckPath": "/auth/realms/master",
+        "HealthCheckPath": "/health/live",
         "Port": 443,
         "Protocol": "HTTPS",
         "TargetGroupAttributes": Array [
@@ -599,23 +599,31 @@ Object {
             ],
             "Environment": Array [
               Object {
-                "Name": "KEYCLOAK_USER",
+                "Name": "KC_HEALTH_ENABLED",
+                "Value": "true",
+              },
+              Object {
+                "Name": "KC_METRICS_ENABLED",
+                "Value": "true",
+              },
+              Object {
+                "Name": "KC_BOOTSTRAP_ADMIN_USERNAME",
                 "Value": "admin",
               },
               Object {
-                "Name": "KEYCLOAK_PASSWORD",
+                "Name": "KC_BOOTSTRAP_ADMIN_PASSWORD",
                 "Value": "admin",
               },
               Object {
-                "Name": "DB_VENDOR",
+                "Name": "KC_DB",
                 "Value": "mysql",
               },
               Object {
-                "Name": "DB_DATABASE",
+                "Name": "KC_DB_URL_DATABASE",
                 "Value": "keycloak",
               },
               Object {
-                "Name": "DB_SCHEMA",
+                "Name": "KC_DB_SCHEMA",
                 "Value": "",
               },
               Object {
@@ -734,7 +742,7 @@ Object {
                 },
               },
               Object {
-                "Name": "DB_USER",
+                "Name": "KC_DB_USERNAME",
                 "ValueFrom": Object {
                   "Fn::Join": Array [
                     "",
@@ -1909,23 +1917,31 @@ Object {
             ],
             "Environment": Array [
               Object {
-                "Name": "KEYCLOAK_USER",
+                "Name": "KC_HEALTH_ENABLED",
+                "Value": "true",
+              },
+              Object {
+                "Name": "KC_METRICS_ENABLED",
+                "Value": "true",
+              },
+              Object {
+                "Name": "KC_BOOTSTRAP_ADMIN_USERNAME",
                 "Value": "admin",
               },
               Object {
-                "Name": "KEYCLOAK_PASSWORD",
+                "Name": "KC_BOOTSTRAP_ADMIN_PASSWORD",
                 "Value": "admin",
               },
               Object {
-                "Name": "DB_VENDOR",
+                "Name": "KC_DB",
                 "Value": "mysql",
               },
               Object {
-                "Name": "DB_DATABASE",
+                "Name": "KC_DB_URL_DATABASE",
                 "Value": "keycloak",
               },
               Object {
-                "Name": "DB_SCHEMA",
+                "Name": "KC_DB_SCHEMA",
                 "Value": "",
               },
               Object {
@@ -2030,7 +2046,7 @@ Object {
                 },
               },
               Object {
-                "Name": "DB_USER",
+                "Name": "KC_DB_USERNAME",
                 "ValueFrom": Object {
                   "Fn::Join": Array [
                     "",
@@ -2930,7 +2946,7 @@ Object {
     "KeycloakLoadBalancerHTTPKeycloakGroup7E632BA1": Object {
       "Properties": Object {
         "HealthCheckEnabled": true,
-        "HealthCheckPath": "/auth/realms/master",
+        "HealthCheckPath": "/health/live",
         "Port": 80,
         "Protocol": "HTTP",
         "TargetGroupAttributes": Array [
@@ -3194,23 +3210,31 @@ Object {
             ],
             "Environment": Array [
               Object {
-                "Name": "KEYCLOAK_USER",
+                "Name": "KC_HEALTH_ENABLED",
+                "Value": "true",
+              },
+              Object {
+                "Name": "KC_METRICS_ENABLED",
+                "Value": "true",
+              },
+              Object {
+                "Name": "KC_BOOTSTRAP_ADMIN_USERNAME",
                 "Value": "admin",
               },
               Object {
-                "Name": "KEYCLOAK_PASSWORD",
+                "Name": "KC_BOOTSTRAP_ADMIN_PASSWORD",
                 "Value": "admin",
               },
               Object {
-                "Name": "DB_VENDOR",
+                "Name": "KC_DB",
                 "Value": "mysql",
               },
               Object {
-                "Name": "DB_DATABASE",
+                "Name": "KC_DB_URL_DATABASE",
                 "Value": "keycloak",
               },
               Object {
-                "Name": "DB_SCHEMA",
+                "Name": "KC_DB_SCHEMA",
                 "Value": "",
               },
               Object {
@@ -3240,7 +3264,7 @@ Object {
             ],
             "Essential": true,
             "Image": Object {
-              "Fn::Sub": "\${AWS::AccountId}.dkr.ecr.\${AWS::Region}.\${AWS::URLSuffix}/cdk-hnb659fds-container-assets-\${AWS::AccountId}-\${AWS::Region}:b81faab80d7073512df2a41d9eed06b0b0bc96f072efa3f29c079eac56b4291f",
+              "Fn::Sub": "\${AWS::AccountId}.dkr.ecr.\${AWS::Region}.\${AWS::URLSuffix}/cdk-hnb659fds-container-assets-\${AWS::AccountId}-\${AWS::Region}:1d944e30a992fbc874acbd2a78fac99a5990210b22d2c3e21e103ab56af27263",
             },
             "LogConfiguration": Object {
               "LogDriver": "awslogs",
@@ -3317,7 +3341,7 @@ Object {
                 },
               },
               Object {
-                "Name": "DB_USER",
+                "Name": "KC_DB_USERNAME",
                 "ValueFrom": Object {
                   "Fn::Join": Array [
                     "",
@@ -4248,7 +4272,7 @@ Object {
     "KeycloakLoadBalancerHTTPKeycloakGroup7E632BA1": Object {
       "Properties": Object {
         "HealthCheckEnabled": true,
-        "HealthCheckPath": "/auth/realms/master",
+        "HealthCheckPath": "/health/live",
         "Port": 80,
         "Protocol": "HTTP",
         "TargetGroupAttributes": Array [
@@ -4512,23 +4536,31 @@ Object {
             ],
             "Environment": Array [
               Object {
-                "Name": "KEYCLOAK_USER",
+                "Name": "KC_HEALTH_ENABLED",
+                "Value": "true",
+              },
+              Object {
+                "Name": "KC_METRICS_ENABLED",
+                "Value": "true",
+              },
+              Object {
+                "Name": "KC_BOOTSTRAP_ADMIN_USERNAME",
                 "Value": "admin",
               },
               Object {
-                "Name": "KEYCLOAK_PASSWORD",
+                "Name": "KC_BOOTSTRAP_ADMIN_PASSWORD",
                 "Value": "admin",
               },
               Object {
-                "Name": "DB_VENDOR",
+                "Name": "KC_DB",
                 "Value": "mysql",
               },
               Object {
-                "Name": "DB_DATABASE",
+                "Name": "KC_DB_URL_DATABASE",
                 "Value": "keycloak",
               },
               Object {
-                "Name": "DB_SCHEMA",
+                "Name": "KC_DB_SCHEMA",
                 "Value": "",
               },
               Object {
@@ -4633,7 +4665,7 @@ Object {
                 },
               },
               Object {
-                "Name": "DB_USER",
+                "Name": "KC_DB_USERNAME",
                 "ValueFrom": Object {
                   "Fn::Join": Array [
                     "",
@@ -5829,7 +5861,7 @@ def pick(dct, *keys):
         "ImageId": Object {
           "Ref": "SsmParameterValueawsserviceecsoptimizedamiamazonlinux2recommendedimageidC96584B6F00A464EAD1953AFF4B05118Parameter",
         },
-        "InstanceType": "t3.small",
+        "InstanceType": "t4g.micro",
         "SecurityGroups": Array [
           Object {
             "Fn::GetAtt": Array [
@@ -6380,23 +6412,31 @@ systemctl start amazon-ssm-agent",
             ],
             "Environment": Array [
               Object {
-                "Name": "KEYCLOAK_USER",
+                "Name": "KC_HEALTH_ENABLED",
+                "Value": "true",
+              },
+              Object {
+                "Name": "KC_METRICS_ENABLED",
+                "Value": "true",
+              },
+              Object {
+                "Name": "KC_BOOTSTRAP_ADMIN_USERNAME",
                 "Value": "admin",
               },
               Object {
-                "Name": "KEYCLOAK_PASSWORD",
+                "Name": "KC_BOOTSTRAP_ADMIN_PASSWORD",
                 "Value": "admin",
               },
               Object {
-                "Name": "DB_VENDOR",
+                "Name": "KC_DB",
                 "Value": "mysql",
               },
               Object {
-                "Name": "DB_DATABASE",
+                "Name": "KC_DB_URL_DATABASE",
                 "Value": "keycloak",
               },
               Object {
-                "Name": "DB_SCHEMA",
+                "Name": "KC_DB_SCHEMA",
                 "Value": "",
               },
               Object {
@@ -6515,7 +6555,7 @@ systemctl start amazon-ssm-agent",
                 },
               },
               Object {
-                "Name": "DB_USER",
+                "Name": "KC_DB_USERNAME",
                 "ValueFrom": Object {
                   "Fn::Join": Array [
                     "",
@@ -7209,7 +7249,7 @@ Object {
     "KeycloakLoadBalancerHTTPKeycloakGroup7E632BA1": Object {
       "Properties": Object {
         "HealthCheckEnabled": true,
-        "HealthCheckPath": "/auth/realms/master",
+        "HealthCheckPath": "/health/live",
         "Port": 80,
         "Protocol": "HTTP",
         "TargetGroupAttributes": Array [
@@ -7482,23 +7522,31 @@ Object {
             ],
             "Environment": Array [
               Object {
-                "Name": "KEYCLOAK_USER",
+                "Name": "KC_HEALTH_ENABLED",
+                "Value": "true",
+              },
+              Object {
+                "Name": "KC_METRICS_ENABLED",
+                "Value": "true",
+              },
+              Object {
+                "Name": "KC_BOOTSTRAP_ADMIN_USERNAME",
                 "Value": "admin",
               },
               Object {
-                "Name": "KEYCLOAK_PASSWORD",
+                "Name": "KC_BOOTSTRAP_ADMIN_PASSWORD",
                 "Value": "admin",
               },
               Object {
-                "Name": "DB_VENDOR",
+                "Name": "KC_DB",
                 "Value": "mysql",
               },
               Object {
-                "Name": "DB_DATABASE",
+                "Name": "KC_DB_URL_DATABASE",
                 "Value": "keycloak",
               },
               Object {
-                "Name": "DB_SCHEMA",
+                "Name": "KC_DB_SCHEMA",
                 "Value": "",
               },
               Object {
@@ -7603,7 +7651,7 @@ Object {
                 },
               },
               Object {
-                "Name": "DB_USER",
+                "Name": "KC_DB_USERNAME",
                 "ValueFrom": Object {
                   "Fn::Join": Array [
                     "",
@@ -8643,7 +8691,7 @@ Object {
     "ServiceLBPublicListenerECSGroup0CC8688C": Object {
       "Properties": Object {
         "HealthCheckEnabled": true,
-        "HealthCheckPath": "/auth/realms/master",
+        "HealthCheckPath": "/health/live",
         "Port": 80,
         "Protocol": "HTTP",
         "TargetGroupAttributes": Array [
@@ -8779,23 +8827,31 @@ Object {
             ],
             "Environment": Array [
               Object {
-                "Name": "KEYCLOAK_USER",
+                "Name": "KC_HEALTH_ENABLED",
+                "Value": "true",
+              },
+              Object {
+                "Name": "KC_METRICS_ENABLED",
+                "Value": "true",
+              },
+              Object {
+                "Name": "KC_BOOTSTRAP_ADMIN_USERNAME",
                 "Value": "admin",
               },
               Object {
-                "Name": "KEYCLOAK_PASSWORD",
+                "Name": "KC_BOOTSTRAP_ADMIN_PASSWORD",
                 "Value": "admin",
               },
               Object {
-                "Name": "DB_VENDOR",
+                "Name": "KC_DB",
                 "Value": "mysql",
               },
               Object {
-                "Name": "DB_DATABASE",
+                "Name": "KC_DB_URL_DATABASE",
                 "Value": "keycloak",
               },
               Object {
-                "Name": "DB_SCHEMA",
+                "Name": "KC_DB_SCHEMA",
                 "Value": "",
               },
               Object {
@@ -8914,7 +8970,7 @@ Object {
                 },
               },
               Object {
-                "Name": "DB_USER",
+                "Name": "KC_DB_USERNAME",
                 "ValueFrom": Object {
                   "Fn::Join": Array [
                     "",
@@ -9945,23 +10001,31 @@ Object {
             ],
             "Environment": Array [
               Object {
-                "Name": "KEYCLOAK_USER",
+                "Name": "KC_HEALTH_ENABLED",
+                "Value": "true",
+              },
+              Object {
+                "Name": "KC_METRICS_ENABLED",
+                "Value": "true",
+              },
+              Object {
+                "Name": "KC_BOOTSTRAP_ADMIN_USERNAME",
                 "Value": "admin",
               },
               Object {
-                "Name": "KEYCLOAK_PASSWORD",
+                "Name": "KC_BOOTSTRAP_ADMIN_PASSWORD",
                 "Value": "admin",
               },
               Object {
-                "Name": "DB_VENDOR",
+                "Name": "KC_DB",
                 "Value": "mysql",
               },
               Object {
-                "Name": "DB_DATABASE",
+                "Name": "KC_DB_URL_DATABASE",
                 "Value": "keycloak",
               },
               Object {
-                "Name": "DB_SCHEMA",
+                "Name": "KC_DB_SCHEMA",
                 "Value": "",
               },
               Object {
@@ -10066,7 +10130,7 @@ Object {
                 },
               },
               Object {
-                "Name": "DB_USER",
+                "Name": "KC_DB_USERNAME",
                 "ValueFrom": Object {
                   "Fn::Join": Array [
                     "",
@@ -10765,12 +10829,12 @@ Object {
       "Properties": Object {
         "AllocatedStorage": "100",
         "CopyTagsToSnapshot": true,
-        "DBInstanceClass": "db.t2.micro",
+        "DBInstanceClass": "db.t4g.micro",
         "DBSubnetGroupName": Object {
           "Ref": "KeycloakDatabaseSubnetGroup5EE09024",
         },
         "Engine": "postgres",
-        "EngineVersion": "11.9",
+        "EngineVersion": "15.4",
         "MasterUserPassword": Object {
           "Fn::Join": Array [
             "",
@@ -10961,7 +11025,7 @@ Object {
     "KeycloakLoadBalancerHTTPKeycloakGroup7E632BA1": Object {
       "Properties": Object {
         "HealthCheckEnabled": true,
-        "HealthCheckPath": "/auth/realms/master",
+        "HealthCheckPath": "/health/live",
         "Port": 80,
         "Protocol": "HTTP",
         "TargetGroupAttributes": Array [
@@ -11225,23 +11289,31 @@ Object {
             ],
             "Environment": Array [
               Object {
-                "Name": "KEYCLOAK_USER",
+                "Name": "KC_HEALTH_ENABLED",
+                "Value": "true",
+              },
+              Object {
+                "Name": "KC_METRICS_ENABLED",
+                "Value": "true",
+              },
+              Object {
+                "Name": "KC_BOOTSTRAP_ADMIN_USERNAME",
                 "Value": "admin",
               },
               Object {
-                "Name": "KEYCLOAK_PASSWORD",
+                "Name": "KC_BOOTSTRAP_ADMIN_PASSWORD",
                 "Value": "admin",
               },
               Object {
-                "Name": "DB_VENDOR",
+                "Name": "KC_DB",
                 "Value": "postgres",
               },
               Object {
-                "Name": "DB_DATABASE",
+                "Name": "KC_DB_URL_DATABASE",
                 "Value": "keycloak",
               },
               Object {
-                "Name": "DB_SCHEMA",
+                "Name": "KC_DB_SCHEMA",
                 "Value": "",
               },
               Object {
@@ -11346,7 +11418,7 @@ Object {
                 },
               },
               Object {
-                "Name": "DB_USER",
+                "Name": "KC_DB_USERNAME",
                 "ValueFrom": Object {
                   "Fn::Join": Array [
                     "",
@@ -12246,7 +12318,7 @@ Object {
     "KeycloakLoadBalancerHTTPKeycloakGroup7E632BA1": Object {
       "Properties": Object {
         "HealthCheckEnabled": true,
-        "HealthCheckPath": "/auth/realms/master",
+        "HealthCheckPath": "/health/live",
         "Port": 80,
         "Protocol": "HTTP",
         "TargetGroupAttributes": Array [
@@ -12510,23 +12582,31 @@ Object {
             ],
             "Environment": Array [
               Object {
-                "Name": "KEYCLOAK_USER",
+                "Name": "KC_HEALTH_ENABLED",
+                "Value": "true",
+              },
+              Object {
+                "Name": "KC_METRICS_ENABLED",
+                "Value": "true",
+              },
+              Object {
+                "Name": "KC_BOOTSTRAP_ADMIN_USERNAME",
                 "Value": "admin",
               },
               Object {
-                "Name": "KEYCLOAK_PASSWORD",
+                "Name": "KC_BOOTSTRAP_ADMIN_PASSWORD",
                 "Value": "admin",
               },
               Object {
-                "Name": "DB_VENDOR",
+                "Name": "KC_DB",
                 "Value": "mysql",
               },
               Object {
-                "Name": "DB_DATABASE",
+                "Name": "KC_DB_URL_DATABASE",
                 "Value": "keycloak",
               },
               Object {
-                "Name": "DB_SCHEMA",
+                "Name": "KC_DB_SCHEMA",
                 "Value": "",
               },
               Object {
@@ -12631,7 +12711,7 @@ Object {
                 },
               },
               Object {
-                "Name": "DB_USER",
+                "Name": "KC_DB_USERNAME",
                 "ValueFrom": Object {
                   "Fn::Join": Array [
                     "",
