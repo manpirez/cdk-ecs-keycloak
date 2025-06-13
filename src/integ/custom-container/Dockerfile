@@ -1,4 +1,4 @@
-ARG FROM=jboss/keycloak
+ARG FROM=quay.io/keycloak/keycloak
 
 FROM ${FROM}
 

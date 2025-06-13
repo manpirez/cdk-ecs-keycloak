@@ -133,6 +133,12 @@ export interface KeycloakClusterProps {
   readonly memoryLimitMiB?: number;
 
   /**
+   * The path to use for health checks.
+   * @default '/health/live'
+   */
+  readonly healthCheckPath?: string;
+
+  /**
    * The minimum percentage of healthy tasks during deployments.
    */
   readonly minHealthyPercent?: number;
@@ -285,7 +291,7 @@ export class KeycloakCluster extends Construct {
       slowStart: cdk.Duration.seconds(60),
       deregistrationDelay: cdk.Duration.seconds(5),
       healthCheck: {
-        path: '/auth/realms/master',
+        path: keycloakTaskDefinition.keycloakContainerExtension.healthCheckPath,
         enabled: true,
       },
     };

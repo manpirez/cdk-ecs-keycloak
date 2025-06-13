@@ -43,7 +43,7 @@ export class IntegEc2Stack extends cdk.Stack {
     });
 
     const capacity = cluster.addCapacity('capacity', {
-      instanceType: ec2.InstanceType.of(ec2.InstanceClass.T3, ec2.InstanceSize.SMALL),
+      instanceType: ec2.InstanceType.of(ec2.InstanceClass.T4G, ec2.InstanceSize.MICRO),
       desiredCapacity: 4,
     });
     capacity.addUserData(
@@ -113,5 +113,5 @@ export class IntegEc2Stack extends cdk.Stack {
 
 const app = new cdk.App();
 new IntegEc2Stack(app, 'integ-ec2-stack', {
-  databaseInstanceEngine: rds.DatabaseInstanceEngine.mysql({ version: rds.MysqlEngineVersion.VER_8_0 }),
+  databaseInstanceEngine: rds.DatabaseInstanceEngine.mysql({ version: rds.MysqlEngineVersion.VER_8_0_26 }),
 });

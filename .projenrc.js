@@ -3,7 +3,7 @@ const { awscdk, release } = require('projen');
 const project = new awscdk.AwsCdkConstructLibrary({
   author: 'Josh Kellendonk',
   authorAddress: 'joshkellendonk@gmail.com',
-  cdkVersion: '2.0.0',
+  cdkVersion: '2.100.0',
   name: '@wheatstalk/cdk-ecs-keycloak',
   repository: 'https://github.com/misterjoshua/cdk-ecs-keycloak.git',
 

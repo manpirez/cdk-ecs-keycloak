@@ -36,7 +36,7 @@ describe('database info', () => {
           },
           {
             name: 'private',
-            subnetType: ec2.SubnetType.PRIVATE,
+            subnetType: ec2.SubnetType.PRIVATE_WITH_EGRESS,
             cidrMask: 21,
           },
         ],
@@ -62,7 +62,7 @@ describe('database info', () => {
           },
           {
             name: 'private',
-            subnetType: ec2.SubnetType.PRIVATE,
+            subnetType: ec2.SubnetType.PRIVATE_WITH_EGRESS,
             cidrMask: 21,
           },
         ],
@@ -121,7 +121,7 @@ describe('database info', () => {
           },
           {
             name: 'private',
-            subnetType: ec2.SubnetType.PRIVATE,
+            subnetType: ec2.SubnetType.PRIVATE_WITH_EGRESS,
             cidrMask: 21,
           },
         ],
@@ -152,7 +152,7 @@ describe('database info', () => {
           },
           {
             name: 'private',
-            subnetType: ec2.SubnetType.PRIVATE,
+            subnetType: ec2.SubnetType.PRIVATE_WITH_EGRESS,
             cidrMask: 21,
           },
         ],
@@ -225,7 +225,7 @@ describe('database info', () => {
           },
           {
             name: 'private',
-            subnetType: ec2.SubnetType.PRIVATE,
+            subnetType: ec2.SubnetType.PRIVATE_WITH_EGRESS,
             cidrMask: 21,
           },
         ],

@@ -18,7 +18,7 @@ export class IntegKeycloakClusterBYOStack extends cdk.Stack {
         },
         {
           name: 'private',
-          subnetType: ec2.SubnetType.PRIVATE,
+          subnetType: ec2.SubnetType.PRIVATE_WITH_EGRESS,
           cidrMask: 21,
         },
       ],
@@ -26,7 +26,7 @@ export class IntegKeycloakClusterBYOStack extends cdk.Stack {
     const rdsDb = new rds.ServerlessCluster(this, 'DB', {
       vpc,
       engine: rds.DatabaseClusterEngine.auroraMysql({
-        version: rds.AuroraMysqlEngineVersion.VER_5_7_12,
+        version: rds.AuroraMysqlEngineVersion.VER_2_11_2,
       }),
       scaling: {
         autoPause: cdk.Duration.minutes(5),

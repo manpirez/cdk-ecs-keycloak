@@ -14,7 +14,7 @@ export class IntegKeycloakClusterCustomContainerStack extends cdk.Stack {
       keycloak: {
         image: ecs.ContainerImage.fromAsset(pathToDockerBuildContext, {
           buildArgs: {
-            FROM: 'jboss/keycloak:12.0.2',
+            FROM: 'quay.io/keycloak/keycloak:26.2.5',
           },
         }),
       },

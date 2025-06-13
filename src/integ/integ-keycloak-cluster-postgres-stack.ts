@@ -11,9 +11,9 @@ export class IntegKeycloakClusterPostgresStack extends cdk.Stack {
     new keycloak.KeycloakCluster(this, 'Keycloak', {
       databaseProvider: keycloak.DatabaseProvider.databaseInstance({
         engine: rds.DatabaseInstanceEngine.postgres({
-          version: rds.PostgresEngineVersion.VER_11_9,
+          version: rds.PostgresEngineVersion.VER_15_4,
         }),
-        instanceType: ec2.InstanceType.of(ec2.InstanceClass.T2, ec2.InstanceSize.MICRO),
+        instanceType: ec2.InstanceType.of(ec2.InstanceClass.T4G, ec2.InstanceSize.MICRO),
       }),
     });
   }

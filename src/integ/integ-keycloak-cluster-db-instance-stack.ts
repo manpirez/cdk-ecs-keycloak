@@ -11,9 +11,9 @@ export class IntegKeycloakClusterDbInstanceStack extends cdk.Stack {
     new keycloak.KeycloakCluster(this, 'Keycloak', {
       databaseProvider: keycloak.DatabaseProvider.databaseInstance({
         engine: rds.DatabaseInstanceEngine.mysql({
-          version: rds.MysqlEngineVersion.VER_5_7,
+          version: rds.MysqlEngineVersion.VER_8_0_26,
         }),
-        instanceType: ec2.InstanceType.of(ec2.InstanceClass.T3, ec2.InstanceSize.MICRO),
+        instanceType: ec2.InstanceType.of(ec2.InstanceClass.T4G, ec2.InstanceSize.MICRO),
       }),
     });
   }

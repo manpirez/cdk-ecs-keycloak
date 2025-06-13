@@ -175,6 +175,11 @@ export class KeycloakContainerExtension implements ecs.ITaskDefinitionExtension 
    */
   public readonly adminConsolePort: number = 9990;
 
+  /**
+   * The path to use for health checks.
+   */
+  public readonly healthCheckPath: string = '/health/live'; 
+
   // Privates
   private readonly _memoryLimitMiB?: number;
   private readonly _memoryReservationMiB?: number;
@@ -183,6 +188,7 @@ export class KeycloakContainerExtension implements ecs.ITaskDefinitionExtension 
   private readonly _image: ecs.ContainerImage;
   private _cloudMapService?: cloudmap.IService;
   private readonly _databaseSchema?: string;
+  
 
   constructor(props?: KeycloakContainerExtensionProps) {
     this.cacheOwnersCount = props?.cacheOwnersCount ?? 1;
@@ -255,18 +261,20 @@ export class KeycloakContainerExtension implements ecs.ITaskDefinitionExtension 
     if (this._databaseCredentials) {
       keycloakSecrets.DB_ADDR = ecs.Secret.fromSecretsManager(this._databaseCredentials, 'host');
       keycloakSecrets.DB_PORT = ecs.Secret.fromSecretsManager(this._databaseCredentials, 'port');
-      keycloakSecrets.DB_USER = ecs.Secret.fromSecretsManager(this._databaseCredentials, 'username');
+      keycloakSecrets.KC_DB_USERNAME = ecs.Secret.fromSecretsManager(this._databaseCredentials, 'username');
       keycloakSecrets.DB_PASSWORD = ecs.Secret.fromSecretsManager(this._databaseCredentials, 'password');
     }
 
     const keycloak = taskDefinition.addContainer(this.containerName, {
       image: this._image,
       environment: {
-        KEYCLOAK_USER: this.defaultAdminUser,
-        KEYCLOAK_PASSWORD: this.defaultAdminPassword,
-        DB_VENDOR: this.databaseVendor,
-        DB_DATABASE: databaseNameForVendor,
-        DB_SCHEMA: this._databaseSchema ?? '',
+        KC_HEALTH_ENABLED: 'true',
+        KC_METRICS_ENABLED: 'true', 
+        KC_BOOTSTRAP_ADMIN_USERNAME: this.defaultAdminUser,
+        KC_BOOTSTRAP_ADMIN_PASSWORD: this.defaultAdminPassword,
+        KC_DB: this.databaseVendor,
+        KC_DB_URL_DATABASE: databaseNameForVendor,
+        KC_DB_SCHEMA: this._databaseSchema ?? '',
         JGROUPS_DISCOVERY_PROTOCOL: cdk.Lazy.string({
           produce: () => this._getJGroupsDiscoveryProtocol(),
         }),
@@ -335,7 +343,7 @@ export class KeycloakContainerExtension implements ecs.ITaskDefinitionExtension 
    */
   public configureHealthCheck(targetGroup: elbv2.ApplicationTargetGroup) {
     targetGroup.configureHealthCheck({
-      path: '/auth/realms/master',
+      path: this.healthCheckPath,
       enabled: true,
     });
   }

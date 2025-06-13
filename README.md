@@ -1,5 +1,7 @@
 # CDK-based Keycloak Cluster on ECS
 
+> **Note**: This repository is a fork based on the original work by [wheatstalk](https://github.com/wheatstalk/cdk-ecs-keycloak). All credit for the original implementation goes to them. This fork will be updated with additional features and improvements while maintaining attribution to the original author.
+
 This CDK construct allows you to spin up a high availability Keycloak cluster on AWS ECS using Fargate capacity.
 
 * [API Reference](https://github.com/wheatstalk/cdk-ecs-keycloak/blob/master/API.md)

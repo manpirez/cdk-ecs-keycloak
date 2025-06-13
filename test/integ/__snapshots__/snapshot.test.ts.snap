@@ -33,6 +33,7 @@ Object {
     "KeycloakDatabase9FB2EF02": Object {
       "DeletionPolicy": "Snapshot",
       "Properties": Object {
+        "CopyTagsToSnapshot": true,
         "DBClusterParameterGroupName": "default.aurora-mysql5.7",
         "DBSubnetGroupName": Object {
           "Ref": "KeycloakDatabaseSubnets53DB24A3",
@@ -182,7 +183,9 @@ Object {
     "KeycloakLoadBalancer21EA60AD": Object {
       "DependsOn": Array [
         "KeycloakVpcingressSubnet1DefaultRouteA1857EB8",
+        "KeycloakVpcingressSubnet1RouteTableAssociation9A9E14B7",
         "KeycloakVpcingressSubnet2DefaultRouteDAB52A53",
+        "KeycloakVpcingressSubnet2RouteTableAssociation9C37B3FF",
       ],
       "Properties": Object {
         "LoadBalancerAttributes": Array [
@@ -340,12 +343,18 @@ Object {
       "DependsOn": Array [
         "KeycloakLoadBalancerHTTPSKeycloakGroupF8466409",
         "KeycloakLoadBalancerHTTPS6970B755",
+        "KeycloakTaskDefinitionTaskRole35970846",
       ],
       "Properties": Object {
         "Cluster": Object {
           "Ref": "KeycloakClusterE151A98B",
         },
         "DeploymentConfiguration": Object {
+          "Alarms": Object {
+            "AlarmNames": Array [],
+            "Enable": false,
+            "Rollback": false,
+          },
           "DeploymentCircuitBreaker": Object {
             "Enable": true,
             "Rollback": true,
@@ -406,6 +415,9 @@ Object {
       "Type": "AWS::ECS::Service",
     },
     "KeycloakServiceCloudmapService002D27A5": Object {
+      "DependsOn": Array [
+        "KeycloakTaskDefinitionTaskRole35970846",
+      ],
       "Properties": Object {
         "DnsConfig": Object {
           "DnsRecords": Array [
@@ -444,6 +456,9 @@ Object {
       "Type": "AWS::ServiceDiscovery::PrivateDnsNamespace",
     },
     "KeycloakServiceSecurityGroup9C087FD3": Object {
+      "DependsOn": Array [
+        "KeycloakTaskDefinitionTaskRole35970846",
+      ],
       "Properties": Object {
         "GroupDescription": "integ-keycloak-cluster-autoscaling-https/Keycloak/Service/SecurityGroup",
         "SecurityGroupEgress": Array [
@@ -460,6 +475,9 @@ Object {
       "Type": "AWS::EC2::SecurityGroup",
     },
     "KeycloakServiceSecurityGroupfromintegkeycloakclusterautoscalinghttpsKeycloakLoadBalancerSecurityGroup9D877AF7844368082926": Object {
+      "DependsOn": Array [
+        "KeycloakTaskDefinitionTaskRole35970846",
+      ],
       "Properties": Object {
         "Description": "Load balancer to target",
         "FromPort": 8443,
@@ -481,6 +499,9 @@ Object {
       "Type": "AWS::EC2::SecurityGroupIngress",
     },
     "KeycloakServiceSecurityGroupfromintegkeycloakclusterautoscalinghttpsKeycloakServiceSecurityGroupCFCB80E1ALLTRAFFIC34ABFA28": Object {
+      "DependsOn": Array [
+        "KeycloakTaskDefinitionTaskRole35970846",
+      ],
       "Properties": Object {
         "Description": "from integkeycloakclusterautoscalinghttpsKeycloakServiceSecurityGroupCFCB80E1:ALL TRAFFIC",
         "GroupId": Object {
@@ -500,6 +521,9 @@ Object {
       "Type": "AWS::EC2::SecurityGroupIngress",
     },
     "KeycloakServiceTaskCountTarget51F033D1": Object {
+      "DependsOn": Array [
+        "KeycloakTaskDefinitionTaskRole35970846",
+      ],
       "Properties": Object {
         "MaxCapacity": 5,
         "MinCapacity": 3,
@@ -543,6 +567,9 @@ Object {
       "Type": "AWS::ApplicationAutoScaling::ScalableTarget",
     },
     "KeycloakServiceTaskCountTargetTarget40E7C31114": Object {
+      "DependsOn": Array [
+        "KeycloakTaskDefinitionTaskRole35970846",
+      ],
       "Properties": Object {
         "PolicyName": "integkeycloakclusterautoscalinghttpsKeycloakServiceTaskCountTargetTarget40B08E5770",
         "PolicyType": "TargetTrackingScaling",
@@ -1014,6 +1041,10 @@ Object {
       "Type": "AWS::EC2::EIP",
     },
     "KeycloakVpcingressSubnet1NATGateway32A1168B": Object {
+      "DependsOn": Array [
+        "KeycloakVpcingressSubnet1DefaultRouteA1857EB8",
+        "KeycloakVpcingressSubnet1RouteTableAssociation9A9E14B7",
+      ],
       "Properties": Object {
         "AllocationId": Object {
           "Fn::GetAtt": Array [
@@ -1118,6 +1149,10 @@ Object {
       "Type": "AWS::EC2::EIP",
     },
     "KeycloakVpcingressSubnet2NATGatewayDE17D04C": Object {
+      "DependsOn": Array [
+        "KeycloakVpcingressSubnet2DefaultRouteDAB52A53",
+        "KeycloakVpcingressSubnet2RouteTableAssociation9C37B3FF",
+      ],
       "Properties": Object {
         "AllocationId": Object {
           "Fn::GetAtt": Array [
@@ -1393,7 +1428,9 @@ Object {
     "Alb16C2F182": Object {
       "DependsOn": Array [
         "VpcingressSubnet1DefaultRoute4188A546",
+        "VpcingressSubnet1RouteTableAssociation5DF54E70",
         "VpcingressSubnet2DefaultRoute18203BC3",
+        "VpcingressSubnet2RouteTableAssociation39E1BA3A",
       ],
       "Properties": Object {
         "LoadBalancerAttributes": Array [
@@ -1512,13 +1549,14 @@ Object {
     "DB4924F778": Object {
       "DeletionPolicy": "Snapshot",
       "Properties": Object {
+        "CopyTagsToSnapshot": true,
         "DBClusterParameterGroupName": "default.aurora-mysql5.7",
         "DBSubnetGroupName": Object {
           "Ref": "DBSubnets7B70DA43",
         },
         "Engine": "aurora-mysql",
         "EngineMode": "serverless",
-        "EngineVersion": "5.7.12",
+        "EngineVersion": "5.7.mysql_aurora.2.11.2",
         "MasterUserPassword": Object {
           "Fn::Join": Array [
             "",
@@ -1682,12 +1720,18 @@ Object {
     "KeycloakService398C344C": Object {
       "DependsOn": Array [
         "AlbhttpKeycloakRuleE6A8F959",
+        "KeycloakTaskDefinitionTaskRole35970846",
       ],
       "Properties": Object {
         "Cluster": Object {
           "Ref": "KeycloakClusterE151A98B",
         },
         "DeploymentConfiguration": Object {
+          "Alarms": Object {
+            "AlarmNames": Array [],
+            "Enable": false,
+            "Rollback": false,
+          },
           "DeploymentCircuitBreaker": Object {
             "Enable": true,
             "Rollback": true,
@@ -1748,6 +1792,9 @@ Object {
       "Type": "AWS::ECS::Service",
     },
     "KeycloakServiceCloudmapService002D27A5": Object {
+      "DependsOn": Array [
+        "KeycloakTaskDefinitionTaskRole35970846",
+      ],
       "Properties": Object {
         "DnsConfig": Object {
           "DnsRecords": Array [
@@ -1786,6 +1833,9 @@ Object {
       "Type": "AWS::ServiceDiscovery::PrivateDnsNamespace",
     },
     "KeycloakServiceSecurityGroup9C087FD3": Object {
+      "DependsOn": Array [
+        "KeycloakTaskDefinitionTaskRole35970846",
+      ],
       "Properties": Object {
         "GroupDescription": "integ-keycloak-cluster-byo/Keycloak/Service/SecurityGroup",
         "SecurityGroupEgress": Array [
@@ -1802,6 +1852,9 @@ Object {
       "Type": "AWS::EC2::SecurityGroup",
     },
     "KeycloakServiceSecurityGroupfromintegkeycloakclusterbyoAlbSecurityGroup2242DD4E808028BAC254": Object {
+      "DependsOn": Array [
+        "KeycloakTaskDefinitionTaskRole35970846",
+      ],
       "Properties": Object {
         "Description": "Load balancer to target",
         "FromPort": 8080,
@@ -1823,6 +1876,9 @@ Object {
       "Type": "AWS::EC2::SecurityGroupIngress",
     },
     "KeycloakServiceSecurityGroupfromintegkeycloakclusterbyoKeycloakServiceSecurityGroup07E041FDALLTRAFFICD62914EB": Object {
+      "DependsOn": Array [
+        "KeycloakTaskDefinitionTaskRole35970846",
+      ],
       "Properties": Object {
         "Description": "from integkeycloakclusterbyoKeycloakServiceSecurityGroup07E041FD:ALL TRAFFIC",
         "GroupId": Object {
@@ -2281,6 +2337,10 @@ Object {
       "Type": "AWS::EC2::EIP",
     },
     "VpcingressSubnet1NATGateway5ADD866D": Object {
+      "DependsOn": Array [
+        "VpcingressSubnet1DefaultRoute4188A546",
+        "VpcingressSubnet1RouteTableAssociation5DF54E70",
+      ],
       "Properties": Object {
         "AllocationId": Object {
           "Fn::GetAtt": Array [
@@ -2385,6 +2445,10 @@ Object {
       "Type": "AWS::EC2::EIP",
     },
     "VpcingressSubnet2NATGatewayDAA0F549": Object {
+      "DependsOn": Array [
+        "VpcingressSubnet2DefaultRoute18203BC3",
+        "VpcingressSubnet2RouteTableAssociation39E1BA3A",
+      ],
       "Properties": Object {
         "AllocationId": Object {
           "Fn::GetAtt": Array [
@@ -2663,6 +2727,7 @@ Object {
     "KeycloakDatabase9FB2EF02": Object {
       "DeletionPolicy": "Snapshot",
       "Properties": Object {
+        "CopyTagsToSnapshot": true,
         "DBClusterParameterGroupName": "default.aurora-mysql5.7",
         "DBSubnetGroupName": Object {
           "Ref": "KeycloakDatabaseSubnets53DB24A3",
@@ -2812,7 +2877,9 @@ Object {
     "KeycloakLoadBalancer21EA60AD": Object {
       "DependsOn": Array [
         "KeycloakVpcingressSubnet1DefaultRouteA1857EB8",
+        "KeycloakVpcingressSubnet1RouteTableAssociation9A9E14B7",
         "KeycloakVpcingressSubnet2DefaultRouteDAB52A53",
+        "KeycloakVpcingressSubnet2RouteTableAssociation9C37B3FF",
       ],
       "Properties": Object {
         "LoadBalancerAttributes": Array [
@@ -2938,12 +3005,18 @@ Object {
       "DependsOn": Array [
         "KeycloakLoadBalancerHTTPKeycloakGroup7E632BA1",
         "KeycloakLoadBalancerHTTP71CCF64D",
+        "KeycloakTaskDefinitionTaskRole35970846",
       ],
       "Properties": Object {
         "Cluster": Object {
           "Ref": "KeycloakClusterE151A98B",
         },
         "DeploymentConfiguration": Object {
+          "Alarms": Object {
+            "AlarmNames": Array [],
+            "Enable": false,
+            "Rollback": false,
+          },
           "DeploymentCircuitBreaker": Object {
             "Enable": true,
             "Rollback": true,
@@ -3004,6 +3077,9 @@ Object {
       "Type": "AWS::ECS::Service",
     },
     "KeycloakServiceCloudmapService002D27A5": Object {
+      "DependsOn": Array [
+        "KeycloakTaskDefinitionTaskRole35970846",
+      ],
       "Properties": Object {
         "DnsConfig": Object {
           "DnsRecords": Array [
@@ -3042,6 +3118,9 @@ Object {
       "Type": "AWS::ServiceDiscovery::PrivateDnsNamespace",
     },
     "KeycloakServiceSecurityGroup9C087FD3": Object {
+      "DependsOn": Array [
+        "KeycloakTaskDefinitionTaskRole35970846",
+      ],
       "Properties": Object {
         "GroupDescription": "integ-keycloak-cluster-custom-container/Keycloak/Service/SecurityGroup",
         "SecurityGroupEgress": Array [
@@ -3058,6 +3137,9 @@ Object {
       "Type": "AWS::EC2::SecurityGroup",
     },
     "KeycloakServiceSecurityGroupfromintegkeycloakclustercustomcontainerKeycloakLoadBalancerSecurityGroup05F8C2B98080DD8F4FB1": Object {
+      "DependsOn": Array [
+        "KeycloakTaskDefinitionTaskRole35970846",
+      ],
       "Properties": Object {
         "Description": "Load balancer to target",
         "FromPort": 8080,
@@ -3079,6 +3161,9 @@ Object {
       "Type": "AWS::EC2::SecurityGroupIngress",
     },
     "KeycloakServiceSecurityGroupfromintegkeycloakclustercustomcontainerKeycloakServiceSecurityGroupE69FDBECALLTRAFFIC4BA57B25": Object {
+      "DependsOn": Array [
+        "KeycloakTaskDefinitionTaskRole35970846",
+      ],
       "Properties": Object {
         "Description": "from integkeycloakclustercustomcontainerKeycloakServiceSecurityGroupE69FDBEC:ALL TRAFFIC",
         "GroupId": Object {
@@ -3575,6 +3660,10 @@ Object {
       "Type": "AWS::EC2::EIP",
     },
     "KeycloakVpcingressSubnet1NATGateway32A1168B": Object {
+      "DependsOn": Array [
+        "KeycloakVpcingressSubnet1DefaultRouteA1857EB8",
+        "KeycloakVpcingressSubnet1RouteTableAssociation9A9E14B7",
+      ],
       "Properties": Object {
         "AllocationId": Object {
           "Fn::GetAtt": Array [
@@ -3679,6 +3768,10 @@ Object {
       "Type": "AWS::EC2::EIP",
     },
     "KeycloakVpcingressSubnet2NATGatewayDE17D04C": Object {
+      "DependsOn": Array [
+        "KeycloakVpcingressSubnet2DefaultRouteDAB52A53",
+        "KeycloakVpcingressSubnet2RouteTableAssociation9C37B3FF",
+      ],
       "Properties": Object {
         "AllocationId": Object {
           "Fn::GetAtt": Array [
@@ -3959,12 +4052,12 @@ Object {
       "Properties": Object {
         "AllocatedStorage": "100",
         "CopyTagsToSnapshot": true,
-        "DBInstanceClass": "db.t3.micro",
+        "DBInstanceClass": "db.t4g.micro",
         "DBSubnetGroupName": Object {
           "Ref": "KeycloakDatabaseSubnetGroup5EE09024",
         },
         "Engine": "mysql",
-        "EngineVersion": "5.7",
+        "EngineVersion": "8.0.26",
         "MasterUserPassword": Object {
           "Fn::Join": Array [
             "",
@@ -4102,7 +4195,9 @@ Object {
     "KeycloakLoadBalancer21EA60AD": Object {
       "DependsOn": Array [
         "KeycloakVpcingressSubnet1DefaultRouteA1857EB8",
+        "KeycloakVpcingressSubnet1RouteTableAssociation9A9E14B7",
         "KeycloakVpcingressSubnet2DefaultRouteDAB52A53",
+        "KeycloakVpcingressSubnet2RouteTableAssociation9C37B3FF",
       ],
       "Properties": Object {
         "LoadBalancerAttributes": Array [
@@ -4228,12 +4323,18 @@ Object {
       "DependsOn": Array [
         "KeycloakLoadBalancerHTTPKeycloakGroup7E632BA1",
         "KeycloakLoadBalancerHTTP71CCF64D",
+        "KeycloakTaskDefinitionTaskRole35970846",
       ],
       "Properties": Object {
         "Cluster": Object {
           "Ref": "KeycloakClusterE151A98B",
         },
         "DeploymentConfiguration": Object {
+          "Alarms": Object {
+            "AlarmNames": Array [],
+            "Enable": false,
+            "Rollback": false,
+          },
           "DeploymentCircuitBreaker": Object {
             "Enable": true,
             "Rollback": true,
@@ -4294,6 +4395,9 @@ Object {
       "Type": "AWS::ECS::Service",
     },
     "KeycloakServiceCloudmapService002D27A5": Object {
+      "DependsOn": Array [
+        "KeycloakTaskDefinitionTaskRole35970846",
+      ],
       "Properties": Object {
         "DnsConfig": Object {
           "DnsRecords": Array [
@@ -4332,6 +4436,9 @@ Object {
       "Type": "AWS::ServiceDiscovery::PrivateDnsNamespace",
     },
     "KeycloakServiceSecurityGroup9C087FD3": Object {
+      "DependsOn": Array [
+        "KeycloakTaskDefinitionTaskRole35970846",
+      ],
       "Properties": Object {
         "GroupDescription": "integ-keycloak-cluster-db-instance/Keycloak/Service/SecurityGroup",
         "SecurityGroupEgress": Array [
@@ -4348,6 +4455,9 @@ Object {
       "Type": "AWS::EC2::SecurityGroup",
     },
     "KeycloakServiceSecurityGroupfromintegkeycloakclusterdbinstanceKeycloakLoadBalancerSecurityGroup0670F60A8080BD34CFF6": Object {
+      "DependsOn": Array [
+        "KeycloakTaskDefinitionTaskRole35970846",
+      ],
       "Properties": Object {
         "Description": "Load balancer to target",
         "FromPort": 8080,
@@ -4369,6 +4479,9 @@ Object {
       "Type": "AWS::EC2::SecurityGroupIngress",
     },
     "KeycloakServiceSecurityGroupfromintegkeycloakclusterdbinstanceKeycloakServiceSecurityGroupFC666C8CALLTRAFFICBFC23B0A": Object {
+      "DependsOn": Array [
+        "KeycloakTaskDefinitionTaskRole35970846",
+      ],
       "Properties": Object {
         "Description": "from integkeycloakclusterdbinstanceKeycloakServiceSecurityGroupFC666C8C:ALL TRAFFIC",
         "GroupId": Object {
@@ -4827,6 +4940,10 @@ Object {
       "Type": "AWS::EC2::EIP",
     },
     "KeycloakVpcingressSubnet1NATGateway32A1168B": Object {
+      "DependsOn": Array [
+        "KeycloakVpcingressSubnet1DefaultRouteA1857EB8",
+        "KeycloakVpcingressSubnet1RouteTableAssociation9A9E14B7",
+      ],
       "Properties": Object {
         "AllocationId": Object {
           "Fn::GetAtt": Array [
@@ -4931,6 +5048,10 @@ Object {
       "Type": "AWS::EC2::EIP",
     },
     "KeycloakVpcingressSubnet2NATGatewayDE17D04C": Object {
+      "DependsOn": Array [
+        "KeycloakVpcingressSubnet2DefaultRouteDAB52A53",
+        "KeycloakVpcingressSubnet2RouteTableAssociation9C37B3FF",
+      ],
       "Properties": Object {
         "AllocationId": Object {
           "Fn::GetAtt": Array [
@@ -5276,13 +5397,13 @@ autoscaling = boto3.client('autoscaling')
 
 
 def lambda_handler(event, context):
-  print(json.dumps(event))
+  print(json.dumps(dict(event, ResponseURL='...')))
   cluster = os.environ['CLUSTER']
   snsTopicArn = event['Records'][0]['Sns']['TopicArn']
   lifecycle_event = json.loads(event['Records'][0]['Sns']['Message'])
   instance_id = lifecycle_event.get('EC2InstanceId')
   if not instance_id:
-    print('Got event without EC2InstanceId: %s', json.dumps(event))
+    print('Got event without EC2InstanceId: %s', json.dumps(dict(event, ResponseURL='...')))
     return
 
   instance_arn = container_instance_arn(cluster, instance_id)
@@ -5292,7 +5413,7 @@ def lambda_handler(event, context):
     return
 
   task_arns = container_instance_task_arns(cluster, instance_arn)
-  
+
   if task_arns:
     print('Instance ARN %s has task ARNs %s' % (instance_arn, ', '.join(task_arns)))
 
@@ -5341,11 +5462,11 @@ def has_tasks(cluster, instance_arn, task_arns):
     if tasks:
       # Consider any non-stopped tasks as running
       task_count = sum(task['lastStatus'] != 'STOPPED' for task in tasks) + instance['pendingTasksCount']
-  
+
   if not task_count:
     # Fallback to instance task counts if detailed task information is unavailable
     task_count = instance['runningTasksCount'] + instance['pendingTasksCount']
-    
+
   print('Instance %s has %s tasks' % (instance_arn, task_count))
 
   return task_count > 0
@@ -5375,7 +5496,7 @@ def pick(dct, *keys):
             "Arn",
           ],
         },
-        "Runtime": "python3.6",
+        "Runtime": "python3.9",
         "Tags": Array [
           Object {
             "Key": "Name",
@@ -5575,17 +5696,7 @@ def pick(dct, *keys):
               "Action": "sts:AssumeRole",
               "Effect": "Allow",
               "Principal": Object {
-                "Service": Object {
-                  "Fn::Join": Array [
-                    "",
-                    Array [
-                      "ec2.",
-                      Object {
-                        "Ref": "AWS::URLSuffix",
-                      },
-                    ],
-                  ],
-                },
+                "Service": "ec2.amazonaws.com",
               },
             },
           ],
@@ -5982,12 +6093,18 @@ systemctl start amazon-ssm-agent",
       "DependsOn": Array [
         "ServiceLBPublicListenerECSGroup0CC8688C",
         "ServiceLBPublicListener46709EAA",
+        "TaskDefinitionTaskRoleFD40A61D",
       ],
       "Properties": Object {
         "Cluster": Object {
           "Ref": "ClusterEB0386A7",
         },
         "DeploymentConfiguration": Object {
+          "Alarms": Object {
+            "AlarmNames": Array [],
+            "Enable": false,
+            "Rollback": false,
+          },
           "MaximumPercent": 200,
           "MinimumHealthyPercent": 100,
         },
@@ -6045,6 +6162,9 @@ systemctl start amazon-ssm-agent",
       "Type": "AWS::ECS::Service",
     },
     "ServiceCloudmapServiceDE76B29D": Object {
+      "DependsOn": Array [
+        "TaskDefinitionTaskRoleFD40A61D",
+      ],
       "Properties": Object {
         "DnsConfig": Object {
           "DnsRecords": Array [
@@ -6077,7 +6197,9 @@ systemctl start amazon-ssm-agent",
     "ServiceLBE9A1ADBC": Object {
       "DependsOn": Array [
         "VpcpublicSubnet1DefaultRouteB88F9E93",
+        "VpcpublicSubnet1RouteTableAssociation4E83B6E4",
         "VpcpublicSubnet2DefaultRoute732F0BEB",
+        "VpcpublicSubnet2RouteTableAssociationCCE257FF",
       ],
       "Properties": Object {
         "LoadBalancerAttributes": Array [
@@ -6182,6 +6304,9 @@ systemctl start amazon-ssm-agent",
       "Type": "AWS::EC2::SecurityGroupEgress",
     },
     "ServiceSecurityGroupEEA09B68": Object {
+      "DependsOn": Array [
+        "TaskDefinitionTaskRoleFD40A61D",
+      ],
       "Properties": Object {
         "GroupDescription": "integ-ec2/Service/Service/SecurityGroup",
         "SecurityGroupEgress": Array [
@@ -6198,6 +6323,9 @@ systemctl start amazon-ssm-agent",
       "Type": "AWS::EC2::SecurityGroup",
     },
     "ServiceSecurityGroupfromintegec2ServiceLBSecurityGroup492EF4838080A283E10A": Object {
+      "DependsOn": Array [
+        "TaskDefinitionTaskRoleFD40A61D",
+      ],
       "Properties": Object {
         "Description": "Load balancer to target",
         "FromPort": 8080,
@@ -6219,6 +6347,9 @@ systemctl start amazon-ssm-agent",
       "Type": "AWS::EC2::SecurityGroupIngress",
     },
     "ServiceSecurityGroupfromintegec2ServiceSecurityGroupE281D2EDALLTRAFFICCB9D774F": Object {
+      "DependsOn": Array [
+        "TaskDefinitionTaskRoleFD40A61D",
+      ],
       "Properties": Object {
         "Description": "from integec2ServiceSecurityGroupE281D2ED:ALL TRAFFIC",
         "GroupId": Object {
@@ -6875,6 +7006,7 @@ Object {
     "KeycloakDatabase9FB2EF02": Object {
       "DeletionPolicy": "Snapshot",
       "Properties": Object {
+        "CopyTagsToSnapshot": true,
         "DBClusterParameterGroupName": "default.aurora-mysql5.7",
         "DBSubnetGroupName": Object {
           "Ref": "KeycloakDatabaseSubnets53DB24A3",
@@ -7024,7 +7156,9 @@ Object {
     "KeycloakLoadBalancer21EA60AD": Object {
       "DependsOn": Array [
         "KeycloakVpcingressSubnet1DefaultRouteA1857EB8",
+        "KeycloakVpcingressSubnet1RouteTableAssociation9A9E14B7",
         "KeycloakVpcingressSubnet2DefaultRouteDAB52A53",
+        "KeycloakVpcingressSubnet2RouteTableAssociation9C37B3FF",
       ],
       "Properties": Object {
         "LoadBalancerAttributes": Array [
@@ -7150,6 +7284,7 @@ Object {
       "DependsOn": Array [
         "KeycloakLoadBalancerHTTPKeycloakGroup7E632BA1",
         "KeycloakLoadBalancerHTTP71CCF64D",
+        "KeycloakTaskDefinitionTaskRole35970846",
       ],
       "Properties": Object {
         "CapacityProviderStrategy": Array [
@@ -7166,6 +7301,11 @@ Object {
           "Ref": "KeycloakClusterE151A98B",
         },
         "DeploymentConfiguration": Object {
+          "Alarms": Object {
+            "AlarmNames": Array [],
+            "Enable": false,
+            "Rollback": false,
+          },
           "DeploymentCircuitBreaker": Object {
             "Enable": true,
             "Rollback": true,
@@ -7225,6 +7365,9 @@ Object {
       "Type": "AWS::ECS::Service",
     },
     "KeycloakServiceCloudmapService002D27A5": Object {
+      "DependsOn": Array [
+        "KeycloakTaskDefinitionTaskRole35970846",
+      ],
       "Properties": Object {
         "DnsConfig": Object {
           "DnsRecords": Array [
@@ -7263,6 +7406,9 @@ Object {
       "Type": "AWS::ServiceDiscovery::PrivateDnsNamespace",
     },
     "KeycloakServiceSecurityGroup9C087FD3": Object {
+      "DependsOn": Array [
+        "KeycloakTaskDefinitionTaskRole35970846",
+      ],
       "Properties": Object {
         "GroupDescription": "integ-keycloak-cluster-spot/Keycloak/Service/SecurityGroup",
         "SecurityGroupEgress": Array [
@@ -7279,6 +7425,9 @@ Object {
       "Type": "AWS::EC2::SecurityGroup",
     },
     "KeycloakServiceSecurityGroupfromintegkeycloakclusterspotKeycloakLoadBalancerSecurityGroupFFF640A4808055432497": Object {
+      "DependsOn": Array [
+        "KeycloakTaskDefinitionTaskRole35970846",
+      ],
       "Properties": Object {
         "Description": "Load balancer to target",
         "FromPort": 8080,
@@ -7300,6 +7449,9 @@ Object {
       "Type": "AWS::EC2::SecurityGroupIngress",
     },
     "KeycloakServiceSecurityGroupfromintegkeycloakclusterspotKeycloakServiceSecurityGroup77DD625EALLTRAFFIC4F98E291": Object {
+      "DependsOn": Array [
+        "KeycloakTaskDefinitionTaskRole35970846",
+      ],
       "Properties": Object {
         "Description": "from integkeycloakclusterspotKeycloakServiceSecurityGroup77DD625E:ALL TRAFFIC",
         "GroupId": Object {
@@ -7758,6 +7910,10 @@ Object {
       "Type": "AWS::EC2::EIP",
     },
     "KeycloakVpcingressSubnet1NATGateway32A1168B": Object {
+      "DependsOn": Array [
+        "KeycloakVpcingressSubnet1DefaultRouteA1857EB8",
+        "KeycloakVpcingressSubnet1RouteTableAssociation9A9E14B7",
+      ],
       "Properties": Object {
         "AllocationId": Object {
           "Fn::GetAtt": Array [
@@ -7862,6 +8018,10 @@ Object {
       "Type": "AWS::EC2::EIP",
     },
     "KeycloakVpcingressSubnet2NATGatewayDE17D04C": Object {
+      "DependsOn": Array [
+        "KeycloakVpcingressSubnet2DefaultRouteDAB52A53",
+        "KeycloakVpcingressSubnet2RouteTableAssociation9C37B3FF",
+      ],
       "Properties": Object {
         "AllocationId": Object {
           "Fn::GetAtt": Array [
@@ -8321,6 +8481,7 @@ Object {
       "DependsOn": Array [
         "ServiceLBPublicListenerECSGroup0CC8688C",
         "ServiceLBPublicListener46709EAA",
+        "TaskDefinitionTaskRoleFD40A61D",
       ],
       "Properties": Object {
         "CapacityProviderStrategy": Array [
@@ -8337,6 +8498,11 @@ Object {
           "Ref": "ClusterEB0386A7",
         },
         "DeploymentConfiguration": Object {
+          "Alarms": Object {
+            "AlarmNames": Array [],
+            "Enable": false,
+            "Rollback": false,
+          },
           "MaximumPercent": 300,
           "MinimumHealthyPercent": 100,
         },
@@ -8390,6 +8556,9 @@ Object {
       "Type": "AWS::ECS::Service",
     },
     "ServiceCloudmapServiceDE76B29D": Object {
+      "DependsOn": Array [
+        "TaskDefinitionTaskRoleFD40A61D",
+      ],
       "Properties": Object {
         "DnsConfig": Object {
           "DnsRecords": Array [
@@ -8421,7 +8590,9 @@ Object {
     "ServiceLBE9A1ADBC": Object {
       "DependsOn": Array [
         "VpcpublicSubnet1DefaultRouteB88F9E93",
+        "VpcpublicSubnet1RouteTableAssociation4E83B6E4",
         "VpcpublicSubnet2DefaultRoute732F0BEB",
+        "VpcpublicSubnet2RouteTableAssociationCCE257FF",
       ],
       "Properties": Object {
         "LoadBalancerAttributes": Array [
@@ -8532,6 +8703,9 @@ Object {
       "Type": "AWS::EC2::SecurityGroupEgress",
     },
     "ServiceSecurityGroupEEA09B68": Object {
+      "DependsOn": Array [
+        "TaskDefinitionTaskRoleFD40A61D",
+      ],
       "Properties": Object {
         "GroupDescription": "integ-fargate/Service/Service/SecurityGroup",
         "SecurityGroupEgress": Array [
@@ -8548,6 +8722,9 @@ Object {
       "Type": "AWS::EC2::SecurityGroup",
     },
     "ServiceSecurityGroupfromintegfargateServiceLBSecurityGroupC37D3C318080548BC1ED": Object {
+      "DependsOn": Array [
+        "TaskDefinitionTaskRoleFD40A61D",
+      ],
       "Properties": Object {
         "Description": "Load balancer to target",
         "FromPort": 8080,
@@ -8569,6 +8746,9 @@ Object {
       "Type": "AWS::EC2::SecurityGroupIngress",
     },
     "ServiceSecurityGroupfromintegfargateServiceSecurityGroup9EB23104ALLTRAFFIC187E5074": Object {
+      "DependsOn": Array [
+        "TaskDefinitionTaskRoleFD40A61D",
+      ],
       "Properties": Object {
         "Description": "from integfargateServiceSecurityGroup9EB23104:ALL TRAFFIC",
         "GroupId": Object {
@@ -9254,6 +9434,7 @@ Object {
     "KeycloakDatabase9FB2EF02": Object {
       "DeletionPolicy": "Snapshot",
       "Properties": Object {
+        "CopyTagsToSnapshot": true,
         "DBClusterParameterGroupName": "default.aurora-mysql5.7",
         "DBSubnetGroupName": Object {
           "Ref": "KeycloakDatabaseSubnets53DB24A3",
@@ -9403,7 +9584,9 @@ Object {
     "KeycloakLoadBalancer21EA60AD": Object {
       "DependsOn": Array [
         "KeycloakVpcingressSubnet1DefaultRouteA1857EB8",
+        "KeycloakVpcingressSubnet1RouteTableAssociation9A9E14B7",
         "KeycloakVpcingressSubnet2DefaultRouteDAB52A53",
+        "KeycloakVpcingressSubnet2RouteTableAssociation9C37B3FF",
       ],
       "Properties": Object {
         "LoadBalancerAttributes": Array [
@@ -9539,12 +9722,18 @@ Object {
         "KeycloakLoadBalancerPort8443TargetGroup6260D1CF",
         "KeycloakLoadBalancerPort999066C9F95E",
         "KeycloakLoadBalancerPort9990TargetGroupD0D649A4",
+        "KeycloakTaskDefinitionTaskRole35970846",
       ],
       "Properties": Object {
         "Cluster": Object {
           "Ref": "KeycloakClusterE151A98B",
         },
         "DeploymentConfiguration": Object {
+          "Alarms": Object {
+            "AlarmNames": Array [],
+            "Enable": false,
+            "Rollback": false,
+          },
           "DeploymentCircuitBreaker": Object {
             "Enable": true,
             "Rollback": true,
@@ -9619,6 +9808,9 @@ Object {
       "Type": "AWS::ECS::Service",
     },
     "KeycloakServiceCloudmapService002D27A5": Object {
+      "DependsOn": Array [
+        "KeycloakTaskDefinitionTaskRole35970846",
+      ],
       "Properties": Object {
         "DnsConfig": Object {
           "DnsRecords": Array [
@@ -9657,6 +9849,9 @@ Object {
       "Type": "AWS::ServiceDiscovery::PrivateDnsNamespace",
     },
     "KeycloakServiceSecurityGroup9C087FD3": Object {
+      "DependsOn": Array [
+        "KeycloakTaskDefinitionTaskRole35970846",
+      ],
       "Properties": Object {
         "GroupDescription": "integ-keycloak-cluster-nlb/Keycloak/Service/SecurityGroup",
         "SecurityGroupEgress": Array [
@@ -9717,6 +9912,9 @@ Object {
       "Type": "AWS::EC2::SecurityGroup",
     },
     "KeycloakServiceSecurityGroupfromintegkeycloakclusternlbKeycloakServiceSecurityGroup00296B77ALLTRAFFIC76E94815": Object {
+      "DependsOn": Array [
+        "KeycloakTaskDefinitionTaskRole35970846",
+      ],
       "Properties": Object {
         "Description": "from integkeycloakclusternlbKeycloakServiceSecurityGroup00296B77:ALL TRAFFIC",
         "GroupId": Object {
@@ -10175,6 +10373,10 @@ Object {
       "Type": "AWS::EC2::EIP",
     },
     "KeycloakVpcingressSubnet1NATGateway32A1168B": Object {
+      "DependsOn": Array [
+        "KeycloakVpcingressSubnet1DefaultRouteA1857EB8",
+        "KeycloakVpcingressSubnet1RouteTableAssociation9A9E14B7",
+      ],
       "Properties": Object {
         "AllocationId": Object {
           "Fn::GetAtt": Array [
@@ -10279,6 +10481,10 @@ Object {
       "Type": "AWS::EC2::EIP",
     },
     "KeycloakVpcingressSubnet2NATGatewayDE17D04C": Object {
+      "DependsOn": Array [
+        "KeycloakVpcingressSubnet2DefaultRouteDAB52A53",
+        "KeycloakVpcingressSubnet2RouteTableAssociation9C37B3FF",
+      ],
       "Properties": Object {
         "AllocationId": Object {
           "Fn::GetAtt": Array [
@@ -10702,7 +10908,9 @@ Object {
     "KeycloakLoadBalancer21EA60AD": Object {
       "DependsOn": Array [
         "KeycloakVpcingressSubnet1DefaultRouteA1857EB8",
+        "KeycloakVpcingressSubnet1RouteTableAssociation9A9E14B7",
         "KeycloakVpcingressSubnet2DefaultRouteDAB52A53",
+        "KeycloakVpcingressSubnet2RouteTableAssociation9C37B3FF",
       ],
       "Properties": Object {
         "LoadBalancerAttributes": Array [
@@ -10828,12 +11036,18 @@ Object {
       "DependsOn": Array [
         "KeycloakLoadBalancerHTTPKeycloakGroup7E632BA1",
         "KeycloakLoadBalancerHTTP71CCF64D",
+        "KeycloakTaskDefinitionTaskRole35970846",
       ],
       "Properties": Object {
         "Cluster": Object {
           "Ref": "KeycloakClusterE151A98B",
         },
         "DeploymentConfiguration": Object {
+          "Alarms": Object {
+            "AlarmNames": Array [],
+            "Enable": false,
+            "Rollback": false,
+          },
           "DeploymentCircuitBreaker": Object {
             "Enable": true,
             "Rollback": true,
@@ -10894,6 +11108,9 @@ Object {
       "Type": "AWS::ECS::Service",
     },
     "KeycloakServiceCloudmapService002D27A5": Object {
+      "DependsOn": Array [
+        "KeycloakTaskDefinitionTaskRole35970846",
+      ],
       "Properties": Object {
         "DnsConfig": Object {
           "DnsRecords": Array [
@@ -10932,6 +11149,9 @@ Object {
       "Type": "AWS::ServiceDiscovery::PrivateDnsNamespace",
     },
     "KeycloakServiceSecurityGroup9C087FD3": Object {
+      "DependsOn": Array [
+        "KeycloakTaskDefinitionTaskRole35970846",
+      ],
       "Properties": Object {
         "GroupDescription": "integ-keycloak-cluster-postgres/Keycloak/Service/SecurityGroup",
         "SecurityGroupEgress": Array [
@@ -10948,6 +11168,9 @@ Object {
       "Type": "AWS::EC2::SecurityGroup",
     },
     "KeycloakServiceSecurityGroupfromintegkeycloakclusterpostgresKeycloakLoadBalancerSecurityGroup7DBA6C2280806C0CEA3E": Object {
+      "DependsOn": Array [
+        "KeycloakTaskDefinitionTaskRole35970846",
+      ],
       "Properties": Object {
         "Description": "Load balancer to target",
         "FromPort": 8080,
@@ -10969,6 +11192,9 @@ Object {
       "Type": "AWS::EC2::SecurityGroupIngress",
     },
     "KeycloakServiceSecurityGroupfromintegkeycloakclusterpostgresKeycloakServiceSecurityGroup506F7AAAALLTRAFFIC4E8EF927": Object {
+      "DependsOn": Array [
+        "KeycloakTaskDefinitionTaskRole35970846",
+      ],
       "Properties": Object {
         "Description": "from integkeycloakclusterpostgresKeycloakServiceSecurityGroup506F7AAA:ALL TRAFFIC",
         "GroupId": Object {
@@ -11427,6 +11653,10 @@ Object {
       "Type": "AWS::EC2::EIP",
     },
     "KeycloakVpcingressSubnet1NATGateway32A1168B": Object {
+      "DependsOn": Array [
+        "KeycloakVpcingressSubnet1DefaultRouteA1857EB8",
+        "KeycloakVpcingressSubnet1RouteTableAssociation9A9E14B7",
+      ],
       "Properties": Object {
         "AllocationId": Object {
           "Fn::GetAtt": Array [
@@ -11531,6 +11761,10 @@ Object {
       "Type": "AWS::EC2::EIP",
     },
     "KeycloakVpcingressSubnet2NATGatewayDE17D04C": Object {
+      "DependsOn": Array [
+        "KeycloakVpcingressSubnet2DefaultRouteDAB52A53",
+        "KeycloakVpcingressSubnet2RouteTableAssociation9C37B3FF",
+      ],
       "Properties": Object {
         "AllocationId": Object {
           "Fn::GetAtt": Array [
@@ -11809,6 +12043,7 @@ Object {
     "KeycloakDatabase9FB2EF02": Object {
       "DeletionPolicy": "Snapshot",
       "Properties": Object {
+        "CopyTagsToSnapshot": true,
         "DBClusterParameterGroupName": "default.aurora-mysql5.7",
         "DBSubnetGroupName": Object {
           "Ref": "KeycloakDatabaseSubnets53DB24A3",
@@ -11958,7 +12193,9 @@ Object {
     "KeycloakLoadBalancer21EA60AD": Object {
       "DependsOn": Array [
         "KeycloakVpcingressSubnet1DefaultRouteA1857EB8",
+        "KeycloakVpcingressSubnet1RouteTableAssociation9A9E14B7",
         "KeycloakVpcingressSubnet2DefaultRouteDAB52A53",
+        "KeycloakVpcingressSubnet2RouteTableAssociation9C37B3FF",
       ],
       "Properties": Object {
         "LoadBalancerAttributes": Array [
@@ -12084,12 +12321,18 @@ Object {
       "DependsOn": Array [
         "KeycloakLoadBalancerHTTPKeycloakGroup7E632BA1",
         "KeycloakLoadBalancerHTTP71CCF64D",
+        "KeycloakTaskDefinitionTaskRole35970846",
       ],
       "Properties": Object {
         "Cluster": Object {
           "Ref": "KeycloakClusterE151A98B",
         },
         "DeploymentConfiguration": Object {
+          "Alarms": Object {
+            "AlarmNames": Array [],
+            "Enable": false,
+            "Rollback": false,
+          },
           "DeploymentCircuitBreaker": Object {
             "Enable": true,
             "Rollback": true,
@@ -12150,6 +12393,9 @@ Object {
       "Type": "AWS::ECS::Service",
     },
     "KeycloakServiceCloudmapService002D27A5": Object {
+      "DependsOn": Array [
+        "KeycloakTaskDefinitionTaskRole35970846",
+      ],
       "Properties": Object {
         "DnsConfig": Object {
           "DnsRecords": Array [
@@ -12188,6 +12434,9 @@ Object {
       "Type": "AWS::ServiceDiscovery::PrivateDnsNamespace",
     },
     "KeycloakServiceSecurityGroup9C087FD3": Object {
+      "DependsOn": Array [
+        "KeycloakTaskDefinitionTaskRole35970846",
+      ],
       "Properties": Object {
         "GroupDescription": "integ-keycloak-cluster-simplest/Keycloak/Service/SecurityGroup",
         "SecurityGroupEgress": Array [
@@ -12204,6 +12453,9 @@ Object {
       "Type": "AWS::EC2::SecurityGroup",
     },
     "KeycloakServiceSecurityGroupfromintegkeycloakclustersimplestKeycloakLoadBalancerSecurityGroup8D91A1528080C8739BCF": Object {
+      "DependsOn": Array [
+        "KeycloakTaskDefinitionTaskRole35970846",
+      ],
       "Properties": Object {
         "Description": "Load balancer to target",
         "FromPort": 8080,
@@ -12225,6 +12477,9 @@ Object {
       "Type": "AWS::EC2::SecurityGroupIngress",
     },
     "KeycloakServiceSecurityGroupfromintegkeycloakclustersimplestKeycloakServiceSecurityGroup9C0A0F42ALLTRAFFICE58A8A55": Object {
+      "DependsOn": Array [
+        "KeycloakTaskDefinitionTaskRole35970846",
+      ],
       "Properties": Object {
         "Description": "from integkeycloakclustersimplestKeycloakServiceSecurityGroup9C0A0F42:ALL TRAFFIC",
         "GroupId": Object {
@@ -12683,6 +12938,10 @@ Object {
       "Type": "AWS::EC2::EIP",
     },
     "KeycloakVpcingressSubnet1NATGateway32A1168B": Object {
+      "DependsOn": Array [
+        "KeycloakVpcingressSubnet1DefaultRouteA1857EB8",
+        "KeycloakVpcingressSubnet1RouteTableAssociation9A9E14B7",
+      ],
       "Properties": Object {
         "AllocationId": Object {
           "Fn::GetAtt": Array [
@@ -12787,6 +13046,10 @@ Object {
       "Type": "AWS::EC2::EIP",
     },
     "KeycloakVpcingressSubnet2NATGatewayDE17D04C": Object {
+      "DependsOn": Array [
+        "KeycloakVpcingressSubnet2DefaultRouteDAB52A53",
+        "KeycloakVpcingressSubnet2RouteTableAssociation9C37B3FF",
+      ],
       "Properties": Object {
         "AllocationId": Object {
           "Fn::GetAtt": Array [

@@ -91,7 +91,7 @@ export class IngressAndPrivateVpcProvider implements IVpcInfoProvider {
         {
           name: 'private',
           cidrMask: 21,
-          subnetType: ec2.SubnetType.PRIVATE,
+          subnetType: ec2.SubnetType.PRIVATE_WITH_EGRESS,
         },
       ],
     });
